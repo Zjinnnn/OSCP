@@ -27,3 +27,17 @@ nmap -sT -Pn -p- --min-rate 5000 $ip
 /usr/share/nmap/scripts/
 cat script.db | grep "\"vuln\""
 ```
+
+### Netcat Banner Grabbing
+
+```bash
+nc example.com 80
+```
+
+### TCP Port Scanning on a Windows Host
+
+``` bash
+Test-NetConnection -Port 445 192.168.50.151
+
+1..65535 | % {echo ((New-Object Net.Sockets.TcpClient).Connect("192.168.50.151", $_)) "TCP port $_ is open"} 2>$null
+```
