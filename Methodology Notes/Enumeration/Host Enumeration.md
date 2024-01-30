@@ -34,6 +34,12 @@ cat script.db | grep "\"vuln\""
 nc example.com 80
 ```
 
+### Nmap Banner Grabbing
+
+```bash
+sudo nmap -v 192.168.86.39 --script banner.nse
+```
+
 ### TCP Port Scanning on a Windows Host
 
 ``` bash
