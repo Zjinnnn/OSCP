@@ -39,7 +39,7 @@ ls -la /etc/cron.*/
 ### SSH Keys
 
 ```bash
-## Search for ssh private keys
+## Search for ssh private keyssm
 grep -rnw "PRIVATE KEY" /home/* 2>/dev/null | grep ":1"
 
 ## Search for ssh public keys

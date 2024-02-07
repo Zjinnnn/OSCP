@@ -30,6 +30,12 @@ samrdump.py 10.129.14.128
 
 ```bash
 smbmap -H 10.129.14.128
+
+smbmap -H 10.129.14.128 -r notes    # r - recursive
+
+smbmap -H 10.129.14.128 --download "notes\note.txt" # Download files
+
+smbmap -H 10.129.14.128 --upload test.txt "notes\test.txt"  # Upload files
 ```
 
 ### CrackMapExec
@@ -41,7 +47,7 @@ crackmapexec smb 10.129.14.128 --shares -u '' -p ''
 ### Enum4Linux
 
 ```bash
-./enum4linux-ng.py 10.129.14.128 -A
+./enum4linux-ng.py 10.10.11.45 -A -C
 ```
 
 ### Windows Host - Powershell
