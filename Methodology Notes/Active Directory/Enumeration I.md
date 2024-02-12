@@ -67,12 +67,17 @@ SMB NULL sessions allow an unauthenticated attacker to retrieve information from
 ```bash
 ## rpcclient
 rpcclient -U "" -N 172.16.5.5
-querydominfo    # Command to query for domain info
-getdompwinfo    # Command to query for domain pw policy
+querydominfo    # Query for domain info
+getdompwinfo    # Query for domain pw policy
+enumdomusers    # Query for domain users
 
 ## enum4linux 
 enum4linux -P 172.16.5.5
 enum4linux-ng -P 172.16.5.5 -oA ilfreight   # Python rewrite of enum4linux
+enum4linux -U 172.16.5.5  | grep "user:" | cut -f2 -d"[" | cut -f1 -d"]"    # Domain user enumeration
+
+## crackmapexec
+crackmapexec smb 172.16.5.5 --users # Domain user enumeration
 ```
 
 ### Windows
@@ -90,7 +95,8 @@ LDAP anonymous binds allow unauthenticated attackers to retrieve information fro
 
 ```bash
 ## Using ldapsearch
-ldapsearch -h 172.16.5.5 -x -b "DC=INLANEFREIGHT,DC=LOCAL" -s sub "*" | grep -m 1 -B 10 pwdHistoryLength
+ldapsearch -h 172.16.5.5 -x -b "DC=INLANEFREIGHT,DC=LOCAL" -s sub "*" | grep -m 1 -B 10 pwdHistoryLength    # Password policy enum
+ldapsearch -h 172.16.5.5 -x -b "DC=INLANEFREIGHT,DC=LOCAL" -s sub "(&(objectclass=user))"  | grep sAMAccountName: | cut -f2 -d" "   # Domain user enum
 ```
 
 ### Windows 
@@ -104,4 +110,51 @@ net accounts
 ## Powerview
 import-module .\PowerView.ps1
 Get-DomainPolicy
+
+## Windapsearch
+./windapsearch.py --dc-ip 172.16.5.5 -u "" -U
 ```
+
+## Enumerating Security Controls
+
+### Windows Defender 
+
+RealTimeProtectionEnabled parameter set to True means Defender is enabled on the system.
+
+```powershell
+Get-MpComputerStatus
+```
+
+### AppLocker
+
+AppLocker is Microsoft's application whitelisting solution and gives system administrators control over which applications and files users can run.
+
+```powershell
+Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections
+```
+
+### PowerShell Constrained Language Mode
+
+PowerShell Constrained Language Mode locks down many of the features needed to use PowerShell effectively, such as blocking COM objects, only allowing approved .NET types, XAML-based workflows, PowerShell classes, and more. 
+
+```powershell
+$ExecutionContext.SessionState.LanguageMode
+```
+
+### Local Administrator Password Solutions (LAPS)
+
+Microsoft Local Administrator Password Solution (LAPS) is used to randomize and rotate local administrator passwords on Windows hosts and prevent lateral movement. We can enumerate what domain users can read the LAPS password set for machines with LAPS installed and what machines do not have LAPS installed.
+
+```powershell
+## Using Find-LAPSDelegatedGroups
+Find-LAPSDelegatedGroups
+
+## Using Find-AdmPwdExtendedRights
+## "All Extended Rights" can read LAPS passwords and may be less protected than users in delegated groups
+Find-AdmPwdExtendedRights   
+
+## Using Get-LAPSComputers
+## Search for computers that have LAPS enabled when passwords expire, and even the randomized passwords in cleartext if our user has access.
+Get-LAPSComputersa
+```
+
